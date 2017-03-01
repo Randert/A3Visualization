@@ -1,0 +1,107 @@
+div {
+        border: 1px solid black;
+}
+
+#layout {
+        width: 1080px;
+        height: 680;
+}
+
+#title, #controls, #infobar {
+        font-family: 'Raleway', sans-serif;
+        text-align: center;
+}
+
+#title {
+        text-align: center;
+        height: 50px;
+    border: none;
+    font-size: 20px;
+}
+
+#visualization {
+        width: 800px;
+        height:450px;
+        float: left;
+        border-top: 0;
+        text-align: center;
+    border-right: 0px;
+}
+
+#visualization2 {
+        width: 800px;
+        height:450px;
+        float: left;
+        border-top: 0;
+        text-align: center;
+    border-right: 0px;
+}
+
+#controls {
+        width: 276px;
+        height:450px;
+        float: right;
+}
+
+.tooltip {
+position: absolute;
+width: 200px;
+height: 28px;
+pointer-events: none;
+}
+
+rect.bar {
+  stroke: none;
+
+}
+
+#x-axis text,
+#y-axis text {
+  font-size: 10pt;
+}
+
+#x-axis2 text,
+#y-axis2 text {
+  font-size: 10pt;
+}
+
+/* path: axis line, line: tick marks */
+
+#x-axis line {
+  fill: none;
+  stroke: none;
+}
+
+#x-axis path,
+#y-axis path,
+#y-axis line {
+  fill: none;
+
+  /* use stroke, not border, for svg elements */
+  stroke: #bbbbbb;
+  stroke-width: 1px;
+}
+
+#x-axis2 line {
+  fill: none;
+  stroke: none;
+}
+
+#x-axis2 path,
+#y-axis2 path,
+#y-axis2 line {
+  fill: none;
+
+  /* use stroke, not border, for svg elements */
+  stroke: #bbbbbb;
+  stroke-width: 1px;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
