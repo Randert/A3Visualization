@@ -6,10 +6,10 @@ var h = height - margin.top - margin.bottom;
 var dataset; //the full dataset
 var patt = new RegExp("all");
 var ndata;
-var maxArrDelay;
-var minArrDelay;
-var maxAirTime;
-var minAirTime;
+var maxArrDelay = 1000;
+var minArrDelay = -100;
+var maxAirTime = 500;
+var minAirTime = 0;
 var maxDepDelay;
 var minDepDelay;
 var currentData;
@@ -20,6 +20,7 @@ var ranges = [[minArrDelay, maxArrDelay], [minDepDelay, maxDepDelay], [0,maxAirT
 var airlines = ["AA","AS","B6","DL","F9","HA","OO","UA","VX","WN"]; //All airlines in bar chart
 var countAirlinesTotal;
 var airlineObject2;
+
 
 
 d3.csv("flightinfo.csv", function(error, flights) {
@@ -36,18 +37,20 @@ d3.csv("flightinfo.csv", function(error, flights) {
   currentData = dataset;
   shownVisual = dataset;
 
+  maxArrDelay = d3.max(shownVisual, function(d) { return d.ARR_DELAY; });
+  minArrDelay = d3.min(shownVisual, function(d) { return d.ARR_DELAY; });
+  maxAirTime = d3.max(shownVisual, function(d) { return d.AIR_TIME; });
+  minAirTime = d3.min(shownVisual, function(d) { return d.AIR_TIME; });
+  x.domain([-100, 1000]);
+  y.domain([0, 500]);
+  updateAxis();
 //all the data is now loaded, so draw the initial vis
   drawVis(dataset);
 //grabbing counts of occurances for barchart
   countAirlines(dataset);
 //draw bar chart
   drawChart(dataset);
-  maxArrDelay = d3.max(dataset, function(d) { return d.ARR_DELAY; });
-  maxDepDelay = d3.max(dataset, function(d) { return d.DEP_DELAY; });
-  minDepDelay = d3.min(dataset, function(d) { return d.DEP_DELAY; });
-  minArrDelay = d3.min(dataset, function(d) { return d.ARR_DELAY; });
-  maxAirTime = d3.max(dataset, function(d) { return d.AIR_TIME; });
-  minAirTime = d3.min(dataset, function(d) { return d.AIR_TIME; });
+
 });
 
 var col = d3.scaleOrdinal(d3.schemeCategory10);
@@ -71,50 +74,38 @@ var tooltip = d3.select("body").append("div")
     .style("opacity", 0);
 
 
-var x = d3.scaleLinear()
-        .domain([-100, 1000])
-        .range([0, w]);
+
+	var x = d3.scaleLinear().range([0, w]).domain([minArrDelay,maxArrDelay]);
 
 
-var y = d3.scaleLinear()
-        .domain([0, 500])
-        .range([h, 0]);
+	var y = d3.scaleLinear().range([h, 0]).domain([minAirTime,maxAirTime]);
 
-var y2 = d3.scaleLinear()
-        .domain([0, 9000])
-        .rangeRound([h, 0]);
+	var y2 = d3.scaleLinear()
+	        .domain([0, 9000])
+	        .rangeRound([h, margin.bottom]);
 
-var x2 = d3.scaleBand()
-        .rangeRound([0, w])
-        .padding(0.3)
-        .domain(airlines);
+	var x2 = d3.scaleBand()
+	        .rangeRound([0, w])
+	        .padding(0.3)
+	        .domain(airlines);
 
-var xAxis = d3.axisBottom()
-    .ticks(4)
-    .scale(x);
+	var xAxis;
 
-var xAxis2 = d3.axisBottom()
-    .ticks(4)
-    .scale(x2);
+	var xAxis2 = d3.axisBottom()
+	    .ticks(4)
+	    .scale(x2);
 
 
-var yAxis = d3.axisLeft()
-    .scale(y);
-var yAxis2 = d3.axisLeft()
-    .scale(y2);
+	var yAxis;
+	var yAxis2 = d3.axisLeft()
+	    .scale(y2);
+
 
 chart.append("g")
-   .attr("class", "axis")
-   .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Air Time");
+   .attr("class", "y-axis");
 
 chart2.append("g")
-   .attr("class", "axis")
+   .attr("class", "y-axis2")
    .call(yAxis2)
       .append("text")
       .attr("transform", "rotate(-90)")
@@ -126,28 +117,23 @@ chart2.append("g")
 
 //add xaxis onto scatter
 chart.append("g")
-    .attr("class", "axis")
-    .attr("transform", "translate(0," + h + ")")
-    .call(xAxis)
-     .append("text")
-      .attr("x", w)
-      .attr("y", -6)
-      .style("text-anchor", "end")
-      .text("Arrival Delay");
+    .attr("class", "x-axis")
+    .attr("transform", "translate(0," + h + ")");
 
 chart2.append("g")
-    .attr("class", "axis")
+    .attr("class", "x-axis2")
     .attr("transform", "translate(0," + h + ")")
     .call(xAxis2)
      .append("text")
       .attr("x", w)
-      .attr("y", -6)
+      .attr("y", -8)
       .style("text-anchor", "end")
       .text("Airline");
 
 
 
 function drawVis(data) { //draw the circiles initially and on each interaction with a control
+  
   var circle = chart.selectAll("circle")
      .data(data);
 
@@ -194,7 +180,9 @@ function filterType(mytype) {
     currentData = dataset;
     toVisualize = currentData.filter(function(d) { return isInRange(d)});
     datasetCount = toVisualize.length; 
-    shownVisual = drawVis(toVisualize); 
+    shownVisual = toVisualize;
+    updateAxis();
+    drawVis(toVisualize); 
     countAirlines(toVisualize);
     drawChart(toVisualize);
     ndata = dataset;
@@ -205,7 +193,9 @@ function filterType(mytype) {
   });
     currentData = ndata;
     toVisualize = currentData.filter(function(d) { return isInRange(d)}); 
-    shownVisual = drawVis(toVisualize); 
+    shownVisual = toVisualize;
+    updateAxis();
+    drawVis(toVisualize); 
         
     datasetCount = toVisualize.length; 
     countAirlines(toVisualize);
@@ -236,7 +226,8 @@ function filterData(attr, values){
     } 
   } 
   var toVisualize = currentData.filter(function(d) { return isInRange(d)}); 
-  shownVisual =drawVis(toVisualize); 
+  shownVisual = toVisualize;
+  drawVis(toVisualize); 
   countAirlines(toVisualize);
   drawChart(toVisualize);
 }
@@ -265,7 +256,7 @@ function countAirlines(input) {
 
   for (var i = 0; i < datasetCount; i++){
       //pulls line in dataset
-      var item = dataset[i];
+      var item = shownVisual[i];
       if(item != null){
        airline =  item.UNIQUE_CARRIER;
 
@@ -286,16 +277,39 @@ function countAirlines(input) {
     var airlineObject = {carrier:airlines[i], count:count[airlines[i]]};
     airlineObject2.push(airlineObject);  
   }
-  console.log(airlineObject2);
+
   countAirlinesTotal = count;
-  console.log(count);
+
 };
+
+function updateAxis(){
+	console.log("updating");
+	maxArrDelay = d3.max(shownVisual, function(d) { return d.ARR_DELAY; });
+	minArrDelay = d3.min(shownVisual, function(d) { return d.ARR_DELAY; });
+	maxAirTime = d3.max(shownVisual, function(d) { return d.AIR_TIME; });
+	minAirTime = d3.min(shownVisual, function(d) { return d.AIR_TIME; });
+	console.log(minArrDelay);
+	console.log(maxArrDelay)
+
+	x = d3.scaleLinear().range([0, w]).domain([minArrDelay,maxArrDelay]);
+    y = d3.scaleLinear().range([h, 0]).domain([minAirTime,maxAirTime]);
+
+	xAxis = d3.axisBottom()
+	    .ticks(4)
+	    .scale(x);
+    yAxis  = d3.axisLeft()
+	    .scale(y);
+
+
+  chart.select(".x-axis").call(xAxis);
+  chart.select(".y-axis").call(yAxis);
+}
+
 
 
 function drawChart(){
-  console.log("y-scale of zero: " + y2(0));
-  console.log("y-scale of zero: " + y(0));
 
+	
   var bar = chart2.selectAll(".bar")
     .data(airlineObject2);
 
@@ -303,6 +317,7 @@ function drawChart(){
     .attr("class","bar")
     .attr("x", function(d) { return x2(d.carrier); })
     .attr("y", function(d){return y2(d.count); })
+    .attr("height", function(d) { return h - y2(d.count); })
     .style("fill", function(d) { return col(d.carrier) });
 
   bar.exit().remove();  
@@ -310,7 +325,7 @@ function drawChart(){
   bar.enter().append("rect")
       .attr("class","bar")
       .attr("x", function(d) { return x2(d.carrier); })
-      .attr("y", function(d){return y2(d.count); })
+      .attr("y", function(d){ return y2(d.count); })
       .attr("width", x2.bandwidth())
       .attr("height", function(d) { return h - y2(d.count); })
       .style("fill", function(d) { return col(d.carrier) })

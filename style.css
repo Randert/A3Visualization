@@ -39,7 +39,7 @@ div {
 
 #controls {
         width: 276px;
-        height:450px;
+        height:900px;
         float: right;
 }
 
@@ -76,7 +76,6 @@ rect.bar {
 #y-axis path,
 #y-axis line {
   fill: none;
-
   /* use stroke, not border, for svg elements */
   stroke: #bbbbbb;
   stroke-width: 1px;
