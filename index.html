@@ -1,44 +1,25 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<meta http-equiv="expires" content="0">
-<style>
-
-body {
-  font: 11px sans-serif;
-}
-
-.axis line,
-.axis text {
-  font: 11px sans-serif;
-}
-.axis path {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-
-</style>
-<body>
-<link href="style.css" rel="stylesheet">
-<script src="https://d3js.org/d3.v4.min.js"></script>
-
- <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
- <link href="https://fonts.googleapis.com/css?family=Roboto:300,300italic" rel="stylesheet" type="text/css">
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-<div id="layout">
-	<div id="title">
-		<p>Air Time vs Arrival Delays Scatterplot </p>
-	</div>
-	<div id="visualization">
-		<svg class="chart"></svg>
-		<script src="assignment3.js"></script>
-    </div>
-    <div id="controls">
-				<!--label for the type dropdown-->
-            			<label for="type">Origin:</label>
-            			<input type="text" id="mytype" readonly style="border:0; color:#f6931f; font-weight:bold;">
+	<meta charset="utf-8">
+	<meta http-equiv="expires" content="0">
+	<body>
+		<link href="style.css" rel="stylesheet">
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,300italic" rel="stylesheet" type="text/css">
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+		<div id="layout">
+			<div id="title">
+				<p>Air Time vs Arrival Delays Scatterplot </p>
+			</div>
+			<div id="visualization" class="visualization1">
+				<svg class="chart"></svg>
+				<script src="assignment3.js"></script>
+		    </div>
+		    <div id="controls">
+						<!--label for the type dropdown-->
+				<label for="mytype">Origin:</label>
+				<input type="text" id="mytype" readonly style="border:0; color:#f6931f; font-weight:bold;">
 				<br>
 				<div id="filters">
 					<select id="myselectform">
@@ -51,25 +32,20 @@ body {
 						<option value="DEN">DEN</option>
 					</select>
 				</div>
-				
 				<p>Departure Delay</p>
-					<div id="departureDelay" class="slider-range"></div>
-					<label for="departuredelayamount">Departure Range:</label>
-					<input type="text" id="departuredelayamount" readonly style="border:0;color:#f6931f;font-weight:bold;">
+				<div id="departureDelay" class="slider-range"></div>
+				<label for="departuredelayamount">Departure Delay:</label>
+				<input type="text" id="departuredelayamount" readonly style="border:0;color:#f6931f;font-weight:bold;">
+			    <button id="reset">Reset Brush</button>
+			</div>
 		</div>
-	</div>
-	<div id="title">
-		<p>Total Delays vs Airline</p>
-	</div>
-    <div id="visualization2">
-		<svg class="chart2"></svg>
-		<script src="assignment3.js"></script>
-    </div>
-         
-
-
-
-
-</body>
+		<div id="title">
+			<p>Total Delays vs Airline</p>
+		</div>
+	    <div id="visualization2">
+			<svg class="chart2"></svg>
+			<script src="assignment3.js"></script>
+	    </div>
+	</body>
 </html>
 
