@@ -104,3 +104,21 @@ rect.bar {
   fill: brown;
 }
 
+
+.axis text {
+        font-family: sans-serif;
+        font-size: 11px;
+      }
+body {
+  font: 11px sans-serif;
+}
+
+.axis line,
+.axis text {
+  font: 11px sans-serif;
+}
+.axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
